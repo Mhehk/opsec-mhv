@@ -39,15 +39,15 @@ public class CrackedAccount implements Account {
             MinecraftAccessor accessor = (MinecraftAccessor) mc;
 
             //? if >=1.21.9 {
-            /*User newUser = new User(
+            User newUser = new User(
                     username,
                     UUID.fromString(uuid),
                     "",
                     Optional.empty(),
                     Optional.empty()
-            );*/
+            );
             //?} else if >=1.20.2 {
-            User newUser = new User(
+            /*User newUser = new User(
                     username,
                     UUID.fromString(uuid),
                     "",
@@ -55,7 +55,7 @@ public class CrackedAccount implements Account {
                     Optional.empty(),
                     User.Type.MSA
             );
-            //?} else {
+            *///?} else {
             /*User newUser = new User(
                     username,
                     uuid,

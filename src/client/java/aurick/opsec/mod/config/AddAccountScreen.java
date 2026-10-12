@@ -245,7 +245,7 @@ public class AddAccountScreen extends Screen {
     
     // keyPressed signature changed in 1.21.9 to use KeyEvent
     //? if <1.21.9 {
-    @Override
+    /*@Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // Enter key to submit
         if (keyCode == 257 && !isValidating) { // GLFW_KEY_ENTER
@@ -254,5 +254,5 @@ public class AddAccountScreen extends Screen {
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
-    //?}
+    *///?}
 }

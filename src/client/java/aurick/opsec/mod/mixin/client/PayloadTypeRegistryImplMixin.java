@@ -7,10 +7,10 @@ import net.fabricmc.fabric.impl.networking.PayloadTypeRegistryImpl;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;*/
+import net.minecraft.resources.Identifier;
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,17 +35,17 @@ public class PayloadTypeRegistryImplMixin {
 
     @Inject(method =
         //? if >=1.21.11 {
-        /*"get(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload$TypeAndCodec;"*/
+        "get(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload$TypeAndCodec;"
         //?} else {
-        "get(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload$TypeAndCodec;"
-        //?}
+        /*"get(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload$TypeAndCodec;"
+        *///?}
         , at = @At("HEAD"), cancellable = true)
     private void opsec$gateInboundChannel(
             //? if >=1.21.11 {
-            /*Identifier id,*/
+            Identifier id,
             //?} else {
-            ResourceLocation id,
-            //?}
+            /*ResourceLocation id,
+            *///?}
             CallbackInfoReturnable<CustomPacketPayload.TypeAndCodec<?, ?>> cir) {
         // Act ONLY while decoding an inbound payload. The same get(id) is called by Fabric's
         // assertPayloadType when mods register receivers — including the play-phase receivers

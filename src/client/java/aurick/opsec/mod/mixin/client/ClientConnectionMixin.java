@@ -20,11 +20,11 @@ import net.minecraft.network.protocol.common.custom.BrandPayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //?}
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;
-*/
+import net.minecraft.resources.Identifier;
+
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -120,10 +120,10 @@ public class ClientConnectionMixin {
             
             CustomPacketPayload payload = customPayloadPacket.payload();
             //? if >=1.21.11 {
-            /*Identifier payloadId = payload.type().id();*/
+            Identifier payloadId = payload.type().id();
             //?} else if >=1.20.5 {
-            ResourceLocation payloadId = payload.type().id();
-            //?} else {
+            /*ResourceLocation payloadId = payload.type().id();
+            *///?} else {
             /*ResourceLocation payloadId = payload.id();
             *///?}
 
@@ -167,10 +167,10 @@ public class ClientConnectionMixin {
                         // - minecraft:* channels
                         // - Whitelisted mod channels (including fabric API modules via DEFAULT_FABRIC_MODS)
                         //? if >=1.21.11 {
-                        /*List<Identifier> filtered = registrationPayload.channels().stream()*/
+                        List<Identifier> filtered = registrationPayload.channels().stream()
                         //?} else {
-                        List<ResourceLocation> filtered = registrationPayload.channels().stream()
-                        //?}
+                        /*List<ResourceLocation> filtered = registrationPayload.channels().stream()
+                        *///?}
                             .filter(ModRegistry::isWhitelistedChannel)
                             .toList();
                         
@@ -323,10 +323,10 @@ public class ClientConnectionMixin {
 
         CustomPacketPayload payload = customPayloadPacket.payload();
         //? if >=1.21.11 {
-        /*Identifier payloadId = payload.type().id();*/
+        Identifier payloadId = payload.type().id();
         //?} else if >=1.20.5 {
-        ResourceLocation payloadId = payload.type().id();
-        //?} else {
+        /*ResourceLocation payloadId = payload.type().id();
+        *///?} else {
         /*ResourceLocation payloadId = payload.id();
         *///?}
 
@@ -405,10 +405,10 @@ public class ClientConnectionMixin {
     @Unique
     private void opsec$handleMinecraftRegisterForFabric(RegistrationPayload original, CallbackInfo ci, Connection connection) {
         //? if >=1.21.11 {
-        /*List<Identifier> originalChannels = original.channels();*/
+        List<Identifier> originalChannels = original.channels();
         //?} else {
-        List<ResourceLocation> originalChannels = original.channels();
-        //?}
+        /*List<ResourceLocation> originalChannels = original.channels();
+        *///?}
         
         // Track ALL channels before filtering - this is what the server would see
         opsec$trackAllChannels(originalChannels);
@@ -417,10 +417,10 @@ public class ClientConnectionMixin {
         // - minecraft:* channels
         // - Whitelisted mod channels (including fabric API modules via DEFAULT_FABRIC_MODS)
         //? if >=1.21.11 {
-        /*List<Identifier> filteredChannels = originalChannels.stream()*/
+        List<Identifier> filteredChannels = originalChannels.stream()
         //?} else {
-        List<ResourceLocation> filteredChannels = originalChannels.stream()
-        //?}
+        /*List<ResourceLocation> filteredChannels = originalChannels.stream()
+        *///?}
             .filter(ModRegistry::isWhitelistedChannel)
             .toList();
         
@@ -454,10 +454,10 @@ public class ClientConnectionMixin {
      */
     @Unique
     //? if >=1.21.11 {
-    /*private void opsec$trackAllChannels(List<Identifier> channels) {*/
+    private void opsec$trackAllChannels(List<Identifier> channels) {
     //?} else {
-    private void opsec$trackAllChannels(List<ResourceLocation> channels) {
-    //?}
+    /*private void opsec$trackAllChannels(List<ResourceLocation> channels) {
+    *///?}
         opsec$trackChannelsFromPayload(channels);
     }
 
@@ -501,17 +501,17 @@ public class ClientConnectionMixin {
      */
     @Unique
     //? if >=1.21.11 {
-    /*private static void opsec$trackChannelsFromPayload(List<Identifier> channels) {*/
+    private static void opsec$trackChannelsFromPayload(List<Identifier> channels) {
     //?} else {
-    private static void opsec$trackChannelsFromPayload(List<ResourceLocation> channels) {
-    //?}
+    /*private static void opsec$trackChannelsFromPayload(List<ResourceLocation> channels) {
+    *///?}
         if (channels == null || channels.isEmpty()) return;
         Opsec.LOGGER.debug("[OpSec] Tracking {} channels from minecraft:register packet", channels.size());
         //? if >=1.21.11 {
-        /*for (Identifier channel : channels) {*/
+        for (Identifier channel : channels) {
         //?} else {
-        for (ResourceLocation channel : channels) {
-        //?}
+        /*for (ResourceLocation channel : channels) {
+        *///?}
             String namespace = channel.getNamespace();
 
             // Forge "common" alias is never a fingerprint.
@@ -547,10 +547,10 @@ public class ClientConnectionMixin {
     //? if >=1.20.5 {
     @Unique
     //? if >=1.21.11 {
-    /*private static RegistrationPayload opsec$createRegistrationPayload(RegistrationPayload original, List<Identifier> channels) {*/
+    private static RegistrationPayload opsec$createRegistrationPayload(RegistrationPayload original, List<Identifier> channels) {
     //?} else {
-    private static RegistrationPayload opsec$createRegistrationPayload(RegistrationPayload original, List<ResourceLocation> channels) {
-    //?}
+    /*private static RegistrationPayload opsec$createRegistrationPayload(RegistrationPayload original, List<ResourceLocation> channels) {
+    *///?}
         try {
             for (Constructor<?> constructor : RegistrationPayload.class.getDeclaredConstructors()) {
                 if (constructor.getParameterCount() == 2) {

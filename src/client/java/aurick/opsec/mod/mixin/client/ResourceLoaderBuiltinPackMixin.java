@@ -3,23 +3,23 @@ package aurick.opsec.mod.mixin.client;
 import aurick.opsec.mod.tracking.ModRegistry;
 import com.llamalad7.mixinextras.sugar.Local;
 //? if >=1.21.11 {
-/*import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.fabric.impl.resource.ResourceLoaderImpl;
 import net.fabricmc.fabric.impl.resource.pack.ModNioPackResources;
-*/
+
 //?} else {
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+/*import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.impl.resource.loader.ModNioResourcePack;
 import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
-//?}
+*///?}
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.network.chat.Component;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;
-*/
+import net.minecraft.resources.Identifier;
+
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -47,11 +47,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * works in both.</p>
  */
 //? if >=1.21.11 {
-/*@Mixin(value = ResourceLoaderImpl.class, remap = false)
-*/
+@Mixin(value = ResourceLoaderImpl.class, remap = false)
+
 //?} else {
-@Mixin(value = ResourceManagerHelperImpl.class, remap = false)
-//?}
+/*@Mixin(value = ResourceManagerHelperImpl.class, remap = false)
+*///?}
 public class ResourceLoaderBuiltinPackMixin {
 
     // No descriptor in `method = "..."` — the target class has `remap = false`
@@ -64,7 +64,7 @@ public class ResourceLoaderBuiltinPackMixin {
     // 5-param signature picks the version with displayName, which is the one
     // with the resourcePack/dataPack locals.
     //? if >=1.21.11 {
-    /*@SuppressWarnings("UnresolvedMixinReference")
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "registerBuiltinPack", at = @At("RETURN"))
     private static void opsec$onRegisterBuiltinPack(
             Identifier id, String subPath, ModContainer container,
@@ -76,8 +76,8 @@ public class ResourceLoaderBuiltinPackMixin {
         if (dataPack == null) return;
         ModRegistry.recordBuiltinPack(container.getMetadata().getId(), id.toString());
     }
-    *///?} else {
-    @SuppressWarnings("UnresolvedMixinReference")
+    //?} else {
+    /*@SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "registerBuiltinResourcePack", at = @At("RETURN"))
     private static void opsec$onRegisterBuiltinPack(
             ResourceLocation id, String subPath, ModContainer container,
@@ -87,5 +87,5 @@ public class ResourceLoaderBuiltinPackMixin {
         if (dataPack == null) return;
         ModRegistry.recordBuiltinPack(container.getMetadata().getId(), id.toString());
     }
-    //?}
+    *///?}
 }

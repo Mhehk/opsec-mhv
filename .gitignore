@@ -36,6 +36,8 @@ Thumbs.db
 # Logs
 *.log
 logs/
+test-runs/
+dist/
 
 # Python cache
 __pycache__/

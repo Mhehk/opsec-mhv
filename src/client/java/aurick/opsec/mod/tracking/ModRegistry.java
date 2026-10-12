@@ -11,15 +11,16 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModDependency;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;
-*/
+import net.minecraft.resources.Identifier;
+
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,15 +66,20 @@ public class ModRegistry {
 
     /** Reverse index: channel -> mod ID for O(1) lookup (P7) */
     //? if >=1.21.11 {
-    /*private static final Map<Identifier, String> channelToModId = new ConcurrentHashMap<>();*/
+    private static final Map<Identifier, String> channelToModId = new ConcurrentHashMap<>();
     //?} else {
-    private static final Map<ResourceLocation, String> channelToModId =
+    /*private static final Map<ResourceLocation, String> channelToModId =
         new ConcurrentHashMap<>();
-    //?}
+    *///?}
 
     /** Transitive required-dep closure of all whitelisted mods. Prevents the "depender resolves, required dep doesn't" fingerprint. Volatile + atomic-swap for lock-free reads. */
     private static volatile Set<String> dependencyClosure =
         ConcurrentHashMap.newKeySet();
+    private static volatile Set<String> axiomCompatibilityMods = Set.of();
+    // Fabric may assign a shared nested dependency to another host (e.g. Flashback).
+    // Axiom's getContainedMods() alone then omits the selected Lattice instance.
+    private static final Set<String> AXIOM_SUPPORT_MODS =
+        Set.of("axiom", "com_moulberry_axiomclientapi", "lattice");
 
     /** modId → seed that pulled it into {@link #dependencyClosure}. First walker wins. Atomically swapped with the closure. */
     private static volatile Map<String, String> implicitProvider =
@@ -106,10 +112,10 @@ public class ModRegistry {
         /** Namespace-qualified shaders the mod ships, e.g. "meteor-client:shaders/blur.vert". */
         private final Set<String> shaders = ConcurrentHashMap.newKeySet();
         //? if >=1.21.11 {
-        /*private final Set<Identifier> channels = ConcurrentHashMap.newKeySet();*/
+        private final Set<Identifier> channels = ConcurrentHashMap.newKeySet();
         //?} else {
-        private final Set<ResourceLocation> channels = ConcurrentHashMap.newKeySet();
-        //?}
+        /*private final Set<ResourceLocation> channels = ConcurrentHashMap.newKeySet();
+        *///?}
 
         public ModInfo(String modId, String displayName) {
             this.modId = modId;
@@ -133,10 +139,10 @@ public class ModRegistry {
         }
 
         //? if >=1.21.11 {
-        /*public Set<Identifier> getChannels() { return Collections.unmodifiableSet(channels); }*/
+        public Set<Identifier> getChannels() { return Collections.unmodifiableSet(channels); }
         //?} else {
-        public Set<ResourceLocation> getChannels() { return Collections.unmodifiableSet(channels); }
-        //?}
+        /*public Set<ResourceLocation> getChannels() { return Collections.unmodifiableSet(channels); }
+        *///?}
 
         public boolean hasTranslationKeys() {
             return !translationKeys.isEmpty();
@@ -352,6 +358,13 @@ public class ModRegistry {
         Set<String> seeds = collectWhitelistSeeds();
         Set<String> closure = ConcurrentHashMap.newKeySet();
         Map<String, String> providers = new ConcurrentHashMap<>();
+        Set<String> axiomClosure = new HashSet<>();
+        if (Opsec.AXIOM_LOADED) {
+            for (String support : AXIOM_SUPPORT_MODS) {
+                walkDependencies("axiom", support, axiomClosure, new HashMap<>());
+            }
+        }
+        axiomCompatibilityMods = Set.copyOf(axiomClosure);
         for (String seed : seeds) {
             walkDependencies(seed, seed, closure, providers);
             walkUpToJijHost(seed, closure, providers);
@@ -368,6 +381,9 @@ public class ModRegistry {
         OpsecConfig config = OpsecConfig.getInstance();
         SpoofSettings settings = config.getSettings();
         Set<String> seeds = new HashSet<>();
+        // Axiom's editing protocol must survive CUSTOM mode and late channel registration.
+        // The existing dependency walk also includes its bundled client API and Lattice.
+        if (Opsec.AXIOM_LOADED) seeds.addAll(AXIOM_SUPPORT_MODS);
         switch (settings.getWhitelistMode()) {
             case AUTO -> {
                 for (ModInfo info : registry.values()) {
@@ -383,6 +399,11 @@ public class ModRegistry {
     /** Whether the given mod is in the transitive dep closure of any whitelisted mod. */
     public static boolean isInDependencyClosure(String modId) {
         return modId != null && dependencyClosure.contains(modId);
+    }
+
+    public static boolean isAxiomCompatibilityMod(String modId) {
+        return Opsec.AXIOM_LOADED && modId != null
+            && ("axiom".equals(modId) || axiomCompatibilityMods.contains(modId));
     }
 
     /** Seed that pulled {@code modId} into the closure, or null if it's a seed itself or not in the closure. */
@@ -683,6 +704,7 @@ public class ModRegistry {
         SpoofSettings settings
     ) {
         if (modId == null) return false;
+        if (Opsec.AXIOM_LOADED && "axiom".equals(modId)) return true;
         if (settings.getWhitelistMode() == SpoofSettings.WhitelistMode.AUTO) {
             ModInfo info = getModInfo(modId);
             if (info != null && info.hasChannels()) return true;
@@ -1029,10 +1051,10 @@ public class ModRegistry {
      * Record a network channel registered by a mod.
      */
     //? if >=1.21.11 {
-    /*public static void recordChannel(String modId, Identifier channel) {*/
+    public static void recordChannel(String modId, Identifier channel) {
     //?} else {
-    public static void recordChannel(String modId, ResourceLocation channel) {
-    //?}
+    /*public static void recordChannel(String modId, ResourceLocation channel) {
+    *///?}
         if (modId == null || channel == null) return;
 
         ModInfo info = getOrCreateModInfo(modId);
@@ -1052,10 +1074,10 @@ public class ModRegistry {
      * and namespace-to-modId alias resolution. No fuzzy matching.
      */
     //? if >=1.21.11 {
-    /*public static boolean isWhitelistedChannel(Identifier channel) {*/
+    public static boolean isWhitelistedChannel(Identifier channel) {
     //?} else {
-    public static boolean isWhitelistedChannel(ResourceLocation channel) {
-    //?}
+    /*public static boolean isWhitelistedChannel(ResourceLocation channel) {
+    *///?}
         if (channel == null) return false;
 
         String namespace = channel.getNamespace();

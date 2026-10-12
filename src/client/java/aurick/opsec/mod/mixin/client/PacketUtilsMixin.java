@@ -1,7 +1,7 @@
 package aurick.opsec.mod.mixin.client;
 
 //? if <1.21.9 {
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import aurick.opsec.mod.detection.PacketContext;
 import aurick.opsec.mod.protection.TranslationProtectionHandler;
@@ -31,11 +31,11 @@ public class PacketUtilsMixin {
         }
     }
 }
-//?} else {
-/*
+*///?} else {
+
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(net.minecraft.network.protocol.PacketUtils.class)
 public class PacketUtilsMixin {
 }
-*///?}
+//?}

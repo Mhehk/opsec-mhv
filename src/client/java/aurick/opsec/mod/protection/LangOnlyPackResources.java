@@ -15,11 +15,11 @@ import net.minecraft.server.packs.metadata.MetadataSectionType;
 //?}
 import net.minecraft.server.packs.resources.IoSupplier;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;
-*/
+import net.minecraft.resources.Identifier;
+
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,20 +55,20 @@ public final class LangOnlyPackResources implements PackResources {
     }
 
     //? if >=1.21.11 {
-    /*@Override
+    @Override
     public IoSupplier<InputStream> getResource(PackType type, Identifier location) {
         if (filterActive() && !isLangResource(type, location.getPath())) return null;
         if (shouldStripShader(type, location.getNamespace(), location.getPath())) return null;
         return delegate.getResource(type, location);
     }
-    *///?} else {
-    @Override
+    //?} else {
+    /*@Override
     public IoSupplier<InputStream> getResource(PackType type, ResourceLocation location) {
         if (filterActive() && !isLangResource(type, location.getPath())) return null;
         if (shouldStripShader(type, location.getNamespace(), location.getPath())) return null;
         return delegate.getResource(type, location);
     }
-    //?}
+    *///?}
 
     @Override
     public void listResources(PackType type, String namespace, String path, ResourceOutput output) {

@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "opsec",
+	"id": "opsec_mhv",
 	"version": "${version}",
-	"name": "OpSec",
-	"description": "Advanced client brand spoofing, tracking exploit protections, and other privacy focused features.",
+	"name": "OpSec — mhv1",
+	"description": "Unofficial mhv1 fork of OpSec with Axiom compatibility. Axiom and its required dependencies are exempt from filtering when installed.",
 	"authors": [
 		"Aurick"
 	],
@@ -36,6 +36,7 @@
 		"exploitpreventer": "*"
 	},
 	"breaks": {
+		"opsec": "*",
 		"ichor": "*",
 		"labymod": "*",
 		"autismsexdefender": "*"

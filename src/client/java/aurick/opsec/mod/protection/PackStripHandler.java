@@ -3,10 +3,10 @@ package aurick.opsec.mod.protection;
 import aurick.opsec.mod.config.OpsecConfig;
 import aurick.opsec.mod.config.SpoofSettings;
 //? if >=1.21.11 {
-/*import net.minecraft.util.Util;*/
+import net.minecraft.util.Util;
 //?} else {
-import net.minecraft.Util;
-//?}
+/*import net.minecraft.Util;
+*///?}
 
 import java.util.Optional;
 import java.util.Set;

@@ -17,8 +17,10 @@ import java.util.concurrent.TimeUnit;
  * {@link aurick.opsec.mod.OpsecClient#onInitializeClient()}.
  */
 public final class Opsec {
-	public static final String MOD_ID = "opsec";
-	public static final String MOD_NAME = "OpSec";
+	public static final String MOD_ID = "opsec_mhv";
+	public static final String MOD_NAME = "OpSec — mhv1";
+	public static final String DISPLAY_VERSION = "mhv1";
+	public static final boolean AXIOM_LOADED = FabricLoader.getInstance().isModLoaded("axiom");
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	// Bounded + DiscardPolicy so a probe flood can't grow the queue without bound and OOM.

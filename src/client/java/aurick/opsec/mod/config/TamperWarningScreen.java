@@ -10,10 +10,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 //? if >=1.21.11 {
-/*import net.minecraft.util.Util;*/
+import net.minecraft.util.Util;
 //?} else {
-import net.minecraft.Util;
-//?}
+/*import net.minecraft.Util;
+*///?}
 
 /**
  * Warning screen displayed when the running jar's SHA-256 does not match the

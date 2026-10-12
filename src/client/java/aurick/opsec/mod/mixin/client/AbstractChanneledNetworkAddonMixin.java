@@ -7,10 +7,10 @@ import net.fabricmc.fabric.impl.networking.client.ClientConfigurationNetworkAddo
 import net.fabricmc.fabric.impl.networking.client.ClientPlayNetworkAddon;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;*/
+import net.minecraft.resources.Identifier;
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,10 +40,10 @@ public class AbstractChanneledNetworkAddonMixin {
         }
 
         //? if >=1.21.11 {
-        /*Identifier id = payload.type().id();*/
+        Identifier id = payload.type().id();
         //?} else {
-        ResourceLocation id = payload.type().id();
-        //?}
+        /*ResourceLocation id = payload.type().id();
+        *///?}
 
         // Returning false means "no handler" -> Fabric falls through to vanilla's silent ignore.
         if (ClientSpoofer.shouldDropInboundChannel(id)) {

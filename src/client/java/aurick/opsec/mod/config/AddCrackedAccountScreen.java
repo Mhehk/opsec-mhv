@@ -212,7 +212,7 @@ public class AddCrackedAccountScreen extends Screen {
     }
 
     //? if <1.21.9 {
-    @Override
+    /*@Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 257 && !isAdding) { // GLFW_KEY_ENTER
             addAccount();
@@ -220,5 +220,5 @@ public class AddCrackedAccountScreen extends Screen {
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
-    //?}
+    *///?}
 }

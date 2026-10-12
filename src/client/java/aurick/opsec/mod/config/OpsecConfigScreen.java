@@ -69,14 +69,14 @@ public class OpsecConfigScreen extends Screen {
     // API changed in 1.21.11 - builder() now requires a default value parameter and doesn't have withInitialValue()
     // IMPORTANT: withValues() must be called BEFORE withInitialValue() for the initial value to work (pre-1.21.11)
     //? if >=1.21.11 {
-    /*private static <T> CycleButton.Builder<T> cycleBuilder(Function<T, Component> valueToText, List<T> values, T initialValue) {
-        return CycleButton.<T>builder(valueToText, initialValue).withValues(values);
-    }*/
-    //?} else {
     private static <T> CycleButton.Builder<T> cycleBuilder(Function<T, Component> valueToText, List<T> values, T initialValue) {
+        return CycleButton.<T>builder(valueToText, initialValue).withValues(values);
+    }
+    //?} else {
+    /*private static <T> CycleButton.Builder<T> cycleBuilder(Function<T, Component> valueToText, List<T> values, T initialValue) {
         return CycleButton.<T>builder(valueToText).withValues(values).withInitialValue(initialValue);
     }
-    //?}
+    *///?}
     
     private final Screen parent;
     private final OpsecConfig config;
@@ -115,7 +115,7 @@ public class OpsecConfigScreen extends Screen {
     }
 
     public OpsecConfigScreen(Screen parent, int initialTab, double scrollOffset) {
-        super(OpsecLang.component(OpsecStrings.CONFIG_TITLE));
+        super(Component.literal(Opsec.MOD_NAME));
         this.parent = parent;
         this.config = OpsecConfig.getInstance();
         this.currentTab = initialTab;
@@ -185,7 +185,7 @@ public class OpsecConfigScreen extends Screen {
         this.repositionElements();
 
         // Version label in bottom-left corner, vertically centered in the 36px footer
-        String currentVersion = "v" + UpdateChecker.getCurrentVersion();
+        String currentVersion = Opsec.DISPLAY_VERSION;
         this.versionOutdated = UpdateChecker.getLatestVersion() != null
                 && !UpdateChecker.getLatestVersion().equals(UpdateChecker.getCurrentVersion());
         String color = versionOutdated ? "\u00A7c" : "\u00A7a";
@@ -202,7 +202,7 @@ public class OpsecConfigScreen extends Screen {
             this.versionLabel.setTooltip(Tooltip.create(OpsecLang.component(
                     OpsecStrings.VERSION_TOOLTIP_OUTDATED, UpdateChecker.getLatestVersion())));
         } else {
-            this.versionLabel.setTooltip(Tooltip.create(OpsecLang.component(OpsecStrings.VERSION_TOOLTIP_UPTODATE)));
+            this.versionLabel.setTooltip(Tooltip.create(Component.literal("Local modified build / Yerel özel sürüm")));
         }
         this.addRenderableWidget(this.versionLabel);
     }
@@ -216,6 +216,13 @@ public class OpsecConfigScreen extends Screen {
         if (OpsecConfig.EXPLOIT_PREVENTER_LOADED) {
             widgets.add(createSectionHeader(OpsecLang.tr(OpsecStrings.EP_MANAGED_HEADER)));
             widgets.add(createEPManagedToggle(OpsecLang.component(OpsecStrings.OPTION_SPOOF_AS_VANILLA)));
+        } else if (Opsec.AXIOM_LOADED) {
+            Button compatibility = Button.builder(Component.literal("Axiom uyumluluğu: AÇIK"), button -> {})
+                    .width(230)
+                    .tooltip(Tooltip.create(Component.literal("Axiom iletişimine izin verilir. Vanilla gibi görünme kapalıdır.")))
+                    .build();
+            compatibility.active = false;
+            widgets.add(compatibility);
         } else {
             widgets.add(cycleBuilder(COLORED_BOOL_TO_TEXT, List.of(Boolean.TRUE, Boolean.FALSE), settings.isSpoofAsVanilla())
                     .withTooltip(v -> Tooltip.create(OpsecLang.component(OpsecStrings.OPTION_SPOOF_AS_VANILLA_TOOLTIP)))
@@ -675,7 +682,7 @@ public class OpsecConfigScreen extends Screen {
         private final Runnable onAccountClick;
         private final Runnable onRemoveClick;
         //? if >=1.21.9 {
-        /*private boolean wasMouseDown = false;*/
+        private boolean wasMouseDown = false;
         //?}
         
         public AccountRowWidget(String accountName, String tooltip, boolean isActive, Runnable onAccountClick, Runnable onRemoveClick) {
@@ -738,7 +745,7 @@ public class OpsecConfigScreen extends Screen {
             wasMouseDown = isMouseDown;
         }*/
         //?} elif >=1.21.9 {
-        /*@Override
+        @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             updateButtonPositions();
             accountButton.render(graphics, mouseX, mouseY, partialTick);
@@ -757,19 +764,19 @@ public class OpsecConfigScreen extends Screen {
                 }
             }
             wasMouseDown = isMouseDown;
-        }*/
+        }
         //?} else {
-        @Override
+        /*@Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             updateButtonPositions();
             accountButton.render(graphics, mouseX, mouseY, partialTick);
             removeButton.render(graphics, mouseX, mouseY, partialTick);
         }
-        //?}
+        *///?}
         
         // Forward mouse clicks to child buttons
         //? if <1.21.9 {
-        @Override
+        /*@Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             if (button == 0) { // Left click only
                 if (accountButton.isMouseOver(mouseX, mouseY)) {
@@ -782,7 +789,7 @@ public class OpsecConfigScreen extends Screen {
             }
             return false;
         }
-        //?}
+        *///?}
         
         @Override
         protected void updateWidgetNarration(NarrationElementOutput output) {
@@ -797,7 +804,7 @@ public class OpsecConfigScreen extends Screen {
         private final Runnable onImportAction;
         private final Runnable onExportAction;
         //? if >=1.21.9 {
-        /*private boolean wasMouseDown = false;*/
+        private boolean wasMouseDown = false;
         //?}
         
         public ImportExportRowWidget(Runnable onImport, Runnable onExport) {
@@ -858,7 +865,7 @@ public class OpsecConfigScreen extends Screen {
             }
             wasMouseDown = isMouseDown;*/
         //?} elif >=1.21.9 {
-        /*@Override
+        @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             updateButtonPositions();
             importButton.render(graphics, mouseX, mouseY, partialTick);
@@ -876,19 +883,19 @@ public class OpsecConfigScreen extends Screen {
                     onExportAction.run();
                 }
             }
-            wasMouseDown = isMouseDown;*/
+            wasMouseDown = isMouseDown;
         //?} else {
-        @Override
+        /*@Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             updateButtonPositions();
             importButton.render(graphics, mouseX, mouseY, partialTick);
             exportButton.render(graphics, mouseX, mouseY, partialTick);
-        //?}
+        *///?}
         }
         
         // Forward mouse clicks to child buttons
         //? if <1.21.9 {
-        @Override
+        /*@Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             if (button == 0) { // Left click only
                 if (importButton.isMouseOver(mouseX, mouseY)) {
@@ -901,7 +908,7 @@ public class OpsecConfigScreen extends Screen {
             }
             return false;
         }
-        //?}
+        *///?}
         
         @Override
         protected void updateWidgetNarration(NarrationElementOutput output) {
@@ -916,7 +923,7 @@ public class OpsecConfigScreen extends Screen {
         private final Runnable onEnableAll;
         private final Runnable onDisableAll;
         //? if >=1.21.9 {
-        /*private boolean wasMouseDown = false;*/
+        private boolean wasMouseDown = false;
         //?}
 
         public ToggleAllRowWidget(Runnable onEnableAll, Runnable onDisableAll) {
@@ -980,7 +987,7 @@ public class OpsecConfigScreen extends Screen {
             wasMouseDown = isMouseDown;
         }*/
         //?} elif >=1.21.9 {
-        /*@Override
+        @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             updateButtonPositions();
             enableAllButton.render(graphics, mouseX, mouseY, partialTick);
@@ -1001,19 +1008,19 @@ public class OpsecConfigScreen extends Screen {
                 }
             }
             wasMouseDown = isMouseDown;
-        }*/
+        }
         //?} else {
-        @Override
+        /*@Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             updateButtonPositions();
             enableAllButton.render(graphics, mouseX, mouseY, partialTick);
             disableAllButton.render(graphics, mouseX, mouseY, partialTick);
         }
-        //?}
+        *///?}
 
         // Forward mouse clicks to child buttons
         //? if <1.21.9 {
-        @Override
+        /*@Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             if (button == 0) { // Left click only
                 if (enableAllButton.isMouseOver(mouseX, mouseY)) {
@@ -1028,7 +1035,7 @@ public class OpsecConfigScreen extends Screen {
             }
             return false;
         }
-        //?}
+        *///?}
 
         @Override
         protected void updateWidgetNarration(NarrationElementOutput output) {
@@ -1115,10 +1122,13 @@ public class OpsecConfigScreen extends Screen {
 
                     boolean isExplicit = settings.getWhitelistedMods().contains(modId);
                     // Locked ON when pulled in via dep closure; user must release via the depender.
-                    boolean isImplicit = !isExplicit && ModRegistry.isInDependencyClosure(modId);
+                    boolean axiomRequired = ModRegistry.isAxiomCompatibilityMod(modId);
+                    boolean isImplicit = axiomRequired || (!isExplicit && ModRegistry.isInDependencyClosure(modId));
                     final String finalModId = modId;
 
-                    Component tooltip = isImplicit
+                    Component tooltip = axiomRequired
+                        ? Component.literal("Axiom uyumluluğu için açık tutulur.")
+                        : isImplicit
                         ? OpsecLang.component(OpsecStrings.WHITELIST_TOOLTIP_REQUIRED_BY,
                             finalModId, ModRegistry.resolveRequiringModName(modId))
                         : Component.literal(finalModId);
@@ -1344,10 +1354,10 @@ public class OpsecConfigScreen extends Screen {
     private void openReleaseUrl() {
         try {
             //? if >=1.21.11 {
-            /*net.minecraft.util.Util.getPlatform().openUri(UpdateChecker.getReleaseUrl());*/
+            net.minecraft.util.Util.getPlatform().openUri(UpdateChecker.getReleaseUrl());
             //?} else {
-            net.minecraft.Util.getPlatform().openUri(UpdateChecker.getReleaseUrl());
-            //?}
+            /*net.minecraft.Util.getPlatform().openUri(UpdateChecker.getReleaseUrl());
+            *///?}
         } catch (Exception e) {
             Opsec.LOGGER.warn("[OpSec] Failed to open release URL: {}", e.getMessage());
         }
@@ -1562,7 +1572,7 @@ public class OpsecConfigScreen extends Screen {
                 widget.extractRenderState(graphics, mouseX, mouseY, partialTick);
             }*/
             //?} elif >=1.21.9 {
-            /*@Override
+            @Override
             public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
                 // Center the widget horizontally on the screen
                 int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
@@ -1570,15 +1580,15 @@ public class OpsecConfigScreen extends Screen {
                 widget.setX(centerX);
                 widget.setY(this.getContentY());
                 widget.render(graphics, mouseX, mouseY, partialTick);
-            }*/
+            }
             //?} else {
-            @Override
+            /*@Override
             public void render(GuiGraphics graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovered, float partialTick) {
                 widget.setX(left + (width - widget.getWidth()) / 2);
                 widget.setY(top);
                 widget.render(graphics, mouseX, mouseY, partialTick);
             }
-            //?}
+            *///?}
 
             @Override
             public List<? extends NarratableEntry> narratables() {
@@ -1591,7 +1601,7 @@ public class OpsecConfigScreen extends Screen {
             }
 
             //? if <1.21.9 {
-            @Override
+            /*@Override
             public boolean mouseClicked(double mouseX, double mouseY, int button) {
                 return widget.mouseClicked(mouseX, mouseY, button);
             }
@@ -1605,7 +1615,7 @@ public class OpsecConfigScreen extends Screen {
             public boolean charTyped(char chr, int modifiers) {
                 return widget.charTyped(chr, modifiers);
             }
-            //?}
+            *///?}
         }
     }
     

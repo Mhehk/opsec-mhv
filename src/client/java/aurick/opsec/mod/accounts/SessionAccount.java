@@ -312,15 +312,15 @@ public class SessionAccount implements Account {
             // Create new User (session)
             // User.Type.MSA was removed in 1.21.9
             //? if >=1.21.9 {
-            /*User newUser = new User(
+            User newUser = new User(
                     username,
                     UUID.fromString(uuid),
                     accessToken,
                     Optional.empty(),
                     Optional.empty()
-            );*/
+            );
             //?} else if >=1.20.2 {
-            User newUser = new User(
+            /*User newUser = new User(
                     username,
                     UUID.fromString(uuid),
                     accessToken,
@@ -328,7 +328,7 @@ public class SessionAccount implements Account {
                     Optional.empty(),
                     User.Type.MSA
             );
-            //?} else {
+            *///?} else {
             /*User newUser = new User(
                     username,
                     uuid,

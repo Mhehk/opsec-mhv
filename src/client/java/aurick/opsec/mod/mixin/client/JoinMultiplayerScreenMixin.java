@@ -41,7 +41,7 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void opsec$addSettingsButton(CallbackInfo ci) {
         this.opsec$settingsButton = Button.builder(
-            Component.literal("OpSec"),
+            Component.literal(aurick.opsec.mod.Opsec.MOD_NAME),
             button -> {
                 if (this.minecraft != null) {
                     //? if >=26.2 {
@@ -70,11 +70,11 @@ public abstract class JoinMultiplayerScreenMixin extends Screen {
     }
     
     //? if >=1.21.9 {
-    /*@Inject(method = "repositionElements", at = @At("TAIL"))
+    @Inject(method = "repositionElements", at = @At("TAIL"))
     private void opsec$onRepositionElements(CallbackInfo ci) {
         opsec$updateButtonPosition();
     }
-    *///?}
+    //?}
     
     @Unique
     private void opsec$updateButtonPosition() {

@@ -18,11 +18,11 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;
-*/
+import net.minecraft.resources.Identifier;
+
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -41,18 +41,18 @@ public class OpsecClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		// Log mod initialization
-		Opsec.LOGGER.info("{} v{} - Privacy protection for Minecraft", Opsec.MOD_NAME, Opsec.getVersion());
+		Opsec.LOGGER.info("{} (upstream {}) - Privacy protection for Minecraft", Opsec.MOD_NAME, Opsec.getVersion());
 		Opsec.LOGGER.info("Protecting against: TrackPack, Key Resolution Exploit, Client Fingerprinting");
 		
 		OpsecConfig.getInstance();
 		OpsecCommand.register();
 		AccountManager.getInstance(); // Load saved accounts
 
-		// Check for mod updates (non-blocking)
-		UpdateChecker.checkForUpdate();
-
-		// Check jar integrity against GitHub release (non-blocking)
-		JarIntegrityChecker.checkIntegrity();
+		// This is a modified local build, not an upstream release. Its checksum is
+		// delivered alongside the JAR; upstream hashes and update prompts do not apply.
+		if (Opsec.AXIOM_LOADED) {
+			Opsec.LOGGER.info("[OpSec mhv1] Axiom compatibility active: vanilla spoofing disabled; Axiom and required dependencies whitelisted.");
+		}
 
 		// Scan for registered channels after all mods have initialized
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
@@ -95,10 +95,10 @@ public class OpsecClient implements ClientModInitializer {
 	}
 
 	//? if >=1.21.11 {
-	/*private int scanChannelSource(Supplier<Set<Identifier>> source, String label) {*/
+	private int scanChannelSource(Supplier<Set<Identifier>> source, String label) {
 	//?} else {
-	private int scanChannelSource(Supplier<Set<ResourceLocation>> source, String label) {
-	//?}
+	/*private int scanChannelSource(Supplier<Set<ResourceLocation>> source, String label) {
+	*///?}
 		try {
 			int count = 0;
 			for (var channel : source.get()) {

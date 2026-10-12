@@ -1,5 +1,6 @@
 package aurick.opsec.mod.config;
 
+import aurick.opsec.mod.Opsec;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -124,8 +125,9 @@ public class SpoofSettings {
 
     public SpoofSettings() {}
 
-    public boolean isSpoofAsVanilla() { return spoofAsVanilla; }
+    public boolean isSpoofAsVanilla() { return !Opsec.AXIOM_LOADED && spoofAsVanilla; }
     public void setSpoofAsVanilla(boolean spoofAsVanilla) {
+        if (Opsec.AXIOM_LOADED && spoofAsVanilla) return;
         if (this.spoofAsVanilla == spoofAsVanilla) return;
         if (spoofAsVanilla) {
             // Off -> On: remember the user's current whitelist choice so we can
@@ -210,11 +212,14 @@ public class SpoofSettings {
     public void setAlertHintShown(boolean shown) { this.alertHintShown = shown; }
 
     // Whitelist methods
-    public WhitelistMode getWhitelistMode() { return whitelistMode; }
+    public WhitelistMode getWhitelistMode() {
+        return Opsec.AXIOM_LOADED && whitelistMode == WhitelistMode.OFF
+            ? WhitelistMode.AUTO : whitelistMode;
+    }
     public void setWhitelistMode(WhitelistMode mode) { this.whitelistMode = mode; }
 
     /** Convenience: returns true when whitelist is active (AUTO or ON) */
-    public boolean isWhitelistEnabled() { return whitelistMode != WhitelistMode.OFF; }
+    public boolean isWhitelistEnabled() { return getWhitelistMode() != WhitelistMode.OFF; }
 
     public Set<String> getWhitelistedMods() { return whitelistedMods; }
     public void setWhitelistedMods(Set<String> mods) { this.whitelistedMods = mods != null ? mods : new HashSet<>(); }
@@ -233,15 +238,15 @@ public class SpoofSettings {
     public void setTamperWarningDismissed(boolean dismissed) { this.tamperWarningDismissed = dismissed; }
 
     public String getEffectiveBrand() {
-        return spoofAsVanilla ? VANILLA : FABRIC;
+        return isSpoofAsVanilla() ? VANILLA : FABRIC;
     }
 
     public boolean isVanillaMode() {
-        return spoofAsVanilla;
+        return isSpoofAsVanilla();
     }
 
     public boolean isFabricMode() {
-        return !spoofAsVanilla;
+        return !isSpoofAsVanilla();
     }
     
     public JsonObject toJson() {

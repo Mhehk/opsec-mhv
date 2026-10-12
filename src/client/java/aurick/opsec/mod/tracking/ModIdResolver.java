@@ -37,7 +37,7 @@ public class ModIdResolver {
                     for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
                         String modId = mod.getMetadata().getId();
                         // Skip opsec and system mods (not real user-installed mods)
-                        if ("opsec".equals(modId) || "minecraft".equals(modId)
+                        if (Opsec.MOD_ID.equals(modId) || "minecraft".equals(modId)
                                 || "java".equals(modId) || "fabricloader".equals(modId)) continue;
 
                         try {

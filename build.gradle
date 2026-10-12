@@ -55,22 +55,22 @@ group = property("maven_group")
 version = property("mod_version")
 
 base {
-    archivesName = "opsec-$version_suffix"
+    archivesName = "opsec"
 }
 
 tasks.named("jar") {
-    archiveFileName = "${base.archivesName.get()}+v${project.version}.jar"
+    archiveFileName = "opsec-mhv1.jar"
 }
 
 def remapJarTask = tasks.findByName("remapJar")
 if (remapJarTask != null) {
-    remapJarTask.archiveFileName = "${base.archivesName.get()}+v${project.version}.jar"
+    remapJarTask.archiveFileName = "opsec-mhv1.jar"
 }
 
 loom {
     splitEnvironmentSourceSets()
     mods {
-        create("opsec") {
+        create("opsec_mhv") {
             sourceSet(sourceSets.main)
             sourceSet(sourceSets.client)
         }

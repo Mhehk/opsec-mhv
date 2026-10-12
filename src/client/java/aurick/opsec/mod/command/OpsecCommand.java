@@ -26,11 +26,11 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 //? if >=1.21.11 {
-/*import net.minecraft.resources.Identifier;
-*/
+import net.minecraft.resources.Identifier;
+
 //?} else {
-import net.minecraft.resources.ResourceLocation;
-//?}
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -273,17 +273,17 @@ public class OpsecCommand {
         int totalChannels = 0;
         for (ModRegistry.ModInfo info : ModRegistry.getAllMods()) {
             //? if >=1.21.11 {
-            /*Set<Identifier> channels = info.getChannels();*/
+            Set<Identifier> channels = info.getChannels();
             //?} else {
-            Set<ResourceLocation> channels = info.getChannels();
-            //?}
+            /*Set<ResourceLocation> channels = info.getChannels();
+            *///?}
             if (!channels.isEmpty()) {
                 source.sendFeedback(subheader(info.getDisplayName() + " (" + info.getModId() + "):"));
                 //? if >=1.21.11 {
-                /*for (Identifier channel : channels) {*/
+                for (Identifier channel : channels) {
                 //?} else {
-                for (ResourceLocation channel : channels) {
-                //?}
+                /*for (ResourceLocation channel : channels) {
+                *///?}
                     boolean whitelisted = ModRegistry.isWhitelistedChannel(channel);
                     if (whitelisted) {
                         source.sendFeedback(Component.literal("  ✓ " + channel.toString())
