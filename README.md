@@ -13,13 +13,6 @@ Teslim dosyası: `opsec-mhv1.jar`. Teknik metadata sürümü upstream ile aynı:
 - Orijinal OpSec ile aynı anda yüklenmesi engellenir; iki kopya aynı mixinleri uygulamamalıdır.
 - Arayüzde mhv1 etiketi ve Axiom uyumluluğu açıklaması görünür. Orijinal GitHub sürümüne yönelik otomatik güncelleme ve checksum karşılaştırması bu değiştirilmiş sürümde çalıştırılmaz. Teslim JAR'ının SHA-256 değeri yanında verilir.
 
-## Kurulum
-
-Modrinth → Mihehehek Kilient → klasörü aç → `mods`.
-Eski `opsec-1.21.11+v1.1.7.1.jar` dosyasını devre dışı bırakıp `opsec-mhv1.jar` dosyasını koy.
-Axiom 6.1.3 aynı kalır. Fabric dependency override gerekmez.
-Geri almak için özel JAR'ı çıkar ve eski OpSec'i yeniden etkinleştir; Axiom 6.1.3 ile eski açılış engeli geri gelir.
-
 ## Derleme ve test
 
 Java 21 ile `./build.ps1` çalıştır. JAR `dist/opsec-mhv1.jar` altında oluşur.
